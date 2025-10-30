@@ -1,0 +1,752 @@
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+  <style>
+    /* Search results specific styles */
+    .search-results {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .search-sidebar {
+      flex: 0 0 280px;
+      position: sticky;
+      top: 2rem;
+      align-self: flex-start;
+    }
+
+    .search-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Search header */
+    .search-header {
+      margin-bottom: 2rem;
+    }
+
+    .search-query {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      color: var(--md-primary-fg-color);
+    }
+
+    .search-count {
+      color: var(--md-typeset-color);
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    /* Filter section */
+    .filter-section {
+      background: var(--md-default-bg-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .filter-title {
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .filter-reset {
+      font-size: 0.875rem;
+      color: var(--md-typeset-a-color);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .filter-reset:hover {
+      color: var(--md-accent-fg-color);
+    }
+
+    .filter-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-group-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--md-default-fg-color--light);
+    }
+
+    .filter-options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .filter-option {
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .filter-option:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-checkbox {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      margin: 0 0.75rem 0 0;
+      cursor: pointer;
+    }
+
+    .filter-checkbox:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--md-default-fg-color--light);
+      border-radius: 4px;
+      background: var(--md-default-bg-color);
+      transition: all 0.2s;
+    }
+
+    .filter-checkbox:checked:before {
+      background: var(--md-primary-fg-color);
+      border-color: var(--md-primary-fg-color);
+    }
+
+    .filter-checkbox:after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 7px;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .filter-checkbox:checked:after {
+      opacity: 1;
+    }
+
+    .filter-label {
+      font-size: 0.9375rem;
+      cursor: pointer;
+      user-select: none;
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filter-count {
+      font-size: 0.8125rem;
+      color: var(--md-default-fg-color--light);
+      background: var(--md-default-fg-color--lightest);
+      padding: 0.125rem 0.5rem;
+      border-radius: 10px;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    /* Results */
+    .results-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem;
+    }
+
+    .result-item {
+      background: var(--md-default-bg-color);
+      border: 1px solid var(--md-default-fg-color--lightest);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .result-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+      border-color: var(--md-primary-fg-color--light);
+    }
+
+    .result-category {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--md-primary-fg-color);
+      background: rgba(0, 120, 212, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      margin-bottom: 0.75rem;
+    }
+
+    .result-title {
+      margin: 0 0 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .result-title a {
+      color: var(--md-typeset-color);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .result-title a:hover {
+      color: var(--md-accent-fg-color);
+    }
+
+    .result-excerpt {
+      margin: 0 0 1rem;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .result-meta {
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+      color: var(--md-default-fg-color--light);
+    }
+
+    .result-updated {
+      display: flex;
+      align-items: center;
+      margin-right: 1.5rem;
+    }
+
+    .result-updated svg {
+      width: 16px;
+      height: 16px;
+      margin-right: 0.5rem;
+      opacity: 0.7;
+    }
+
+    /* No results */
+    .no-results {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: var(--md-default-bg-color);
+      border-radius: 8px;
+      border: 1px dashed var(--md-default-fg-color--lightest);
+    }
+
+    .no-results-illustration {
+      max-width: 300px;
+      margin: 0 auto 2rem;
+      opacity: 0.8;
+    }
+
+    .no-results-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+    }
+
+    .no-results-message {
+      color: var(--md-default-fg-color--light);
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    .suggested-searches {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .suggested-search {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--md-default-fg-color--lightest);
+      color: var(--md-typeset-a-color);
+      border-radius: 20px;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .suggested-search:hover {
+      background: var(--md-primary-fg-color);
+      color: white;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 3rem 0 1rem;
+    }
+
+    .pagination-list {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0 1rem;
+    }
+
+    .pagination-item {
+      margin: 0 0.25rem;
+    }
+
+    .pagination-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: var(--md-typeset-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .pagination-link:hover {
+      background: var(--md-default-fg-color--lightest);
+    }
+
+    .pagination-link.is-current {
+      background: var(--md-primary-fg-color);
+      color: white;
+    }
+
+    .pagination-prev,
+    .pagination-next {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: var(--md-default-fg-color--lightest);
+      color: var(--md-typeset-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .pagination-prev:hover,
+    .pagination-next:hover {
+      background: var(--md-primary-fg-color);
+      color: white;
+    }
+
+    .pagination-prev svg,
+    .pagination-next svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .pagination-prev {
+      margin-right: 1rem;
+    }
+
+    .pagination-prev svg {
+      margin-right: 0.5rem;
+    }
+
+    .pagination-next {
+      margin-left: 1rem;
+    }
+
+    .pagination-next svg {
+      margin-left: 0.5rem;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0.75rem 0;
+      margin: 0 0 1.5rem;
+      list-style: none;
+      font-size: 0.875rem;
+    }
+
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: '/';
+      display: inline-block;
+      padding: 0 0.5rem;
+      color: var(--md-default-fg-color--light);
+    }
+
+    .breadcrumb-link {
+      color: var(--md-typeset-a-color);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb-link:hover {
+      color: var(--md-accent-fg-color);
+      text-decoration: underline;
+    }
+
+    .breadcrumb-item.active {
+      color: var(--md-default-fg-color--light);
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .search-results {
+        flex-direction: column;
+      }
+
+      .search-sidebar {
+        position: static;
+        width: 100%;
+        margin-bottom: 2rem;
+      }
+
+      .filter-section {
+        position: sticky;
+        top: 1rem;
+        z-index: 10;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .result-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .result-updated {
+        margin-bottom: 0.5rem;
+      }
+
+      .pagination {
+        flex-wrap: wrap;
+      }
+
+      .pagination-prev,
+      .pagination-next {
+        width: 100%;
+        justify-content: center;
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+
+  <section class="mdx-container">
+    <div class="search-results">
+      <!-- Sidebar with filters -->
+      <aside class="search-sidebar">
+        <div class="filter-section">
+          <div class="filter-header">
+            <h2 class="filter-title">Filters</h2>
+            <a href="#" class="filter-reset">
+              <span>Reset all</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"/>
+              </svg>
+            </a>
+          </div>
+          
+          <div class="filter-group">
+            <h3 class="filter-group-title">Categories</h3>
+            <ul class="filter-options">
+              <li class="filter-option">
+                <input type="checkbox" id="cat-troubleshooting" class="filter-checkbox">
+                <label for="cat-troubleshooting" class="filter-label">
+                  <span>Troubleshooting</span>
+                  <span class="filter-count">24</span>
+                </label>
+              </li>
+              <li class="filter-option">
+                <input type="checkbox" id="cat-security" class="filter-checkbox" checked>
+                <label for="cat-security" class="filter-label">
+                  <span>Security</span>
+                  <span class="filter-count">18</span>
+                </label>
+              </li>
+              <li class="filter-option">
+                <input type="checkbox" id="cat-updates" class="filter-checkbox">
+                <label for="cat-updates" class="filter-label">
+                  <span>Updates</span>
+                  <span class="filter-count">12</span>
+                </label>
+              </li>
+              <li class="filter-option">
+                <input type="checkbox" id="cat-networking" class="filter-checkbox">
+                <label for="cat-networking" class="filter-label">
+                  <span>Networking</span>
+                  <span class="filter-count">9</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="filter-group">
+            <h3 class="filter-group-title">Content Type</h3>
+            <ul class="filter-options">
+              <li class="filter-option">
+                <input type="checkbox" id="type-guide" class="filter-checkbox" checked>
+                <label for="type-guide" class="filter-label">
+                  <span>Guides</span>
+                  <span class="filter-count">42</span>
+                </label>
+              </li>
+              <li class="filter-option">
+                <input type="checkbox" id="type-tutorial" class="filter-checkbox" checked>
+                <label for="type-tutorial" class="filter-label">
+                  <span>Tutorials</span>
+                  <span class="filter-count">28</span>
+                </label>
+              </li>
+              <li class="filter-option">
+                <input type="checkbox" id="type-reference" class="filter-checkbox">
+                <label for="type-reference" class="filter-label">
+                  <span>Reference</span>
+                  <span class="filter-count">15</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="filter-group">
+            <h3 class="filter-group-title">Difficulty</h3>
+            <ul class="filter-options">
+              <li class="filter-option">
+                <input type="checkbox" id="diff-beginner" class="filter-checkbox">
+                <label for="diff-beginner" class="filter-label">
+                  <span>Beginner</span>
+                  <span class="filter-count">32</span>
+                </label>
+              </li>
+              <li class="filter-option">
+                <input type="checkbox" id="diff-intermediate" class="filter-checkbox" checked>
+                <label for="diff-intermediate" class="filter-label">
+                  <span>Intermediate</span>
+                  <span class="filter-count">45</span>
+                </label>
+              </li>
+              <li class="filter-option">
+                <input type="checkbox" id="diff-advanced" class="filter-checkbox">
+                <label for="diff-advanced" class="filter-label">
+                  <span>Advanced</span>
+                  <span class="filter-count">18</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="search-main">
+        <!-- Search header with results count -->
+        <header class="search-header">
+          <h1 class="search-query">Search results for: <strong>Windows Update</strong></h1>
+          <p class="search-count">24 results found</p>
+        </header>
+
+        <!-- Breadcrumb navigation -->
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Search: Windows Update</li>
+          </ol>
+        </nav>
+
+        <!-- Results list -->
+        <div class="search-results-container">
+          <ul class="results-list">
+            <!-- Result item 1 -->
+            <li class="result-item">
+              <span class="result-category">Troubleshooting</span>
+              <h2 class="result-title">
+                <a href="/troubleshooting/windows-update-issues">How to Fix Common Windows Update Errors</a>
+              </h2>
+              <p class="result-excerpt">Learn how to troubleshoot and resolve common Windows Update errors including error codes 0x80070002, 0x80070003, and 0x80073712 with our step-by-step guide.</p>
+              <div class="result-meta">
+                <span class="result-updated">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                  </svg>
+                  Updated: October 15, 2025
+                </span>
+                <span class="result-difficulty">Intermediate</span>
+              </div>
+            </li>
+
+            <!-- Result item 2 -->
+            <li class="result-item">
+              <span class="result-category">Security</span>
+              <h2 class="result-title">
+                <a href="/security/windows-update-best-practices">Windows Update Security Best Practices</a>
+              </h2>
+              <p class="result-excerpt">Implement these security best practices for managing Windows Updates in your organization to ensure systems stay protected against the latest threats.</p>
+              <div class="result-meta">
+                <span class="result-updated">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                  </svg>
+                  Updated: October 5, 2025
+                </span>
+                <span class="result-difficulty">Advanced</span>
+              </div>
+            </li>
+
+            <!-- Result item 3 -->
+            <li class="result-item">
+              <span class="result-category">Updates</span>
+              <h2 class="result-title">
+                <a href="/updates/windows-11-24h2-update">What's New in Windows 11 24H2 Update</a>
+              </h2>
+              <p class="result-excerpt">Discover all the new features, improvements, and changes in the Windows 11 24H2 update, including the redesigned Start menu and enhanced security features.</p>
+              <div class="result-meta">
+                <span class="result-updated">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                  </svg>
+                  Updated: September 28, 2025
+                </span>
+                <span class="result-difficulty">Beginner</span>
+              </div>
+            </li>
+          </ul>
+
+          <!-- No results state (hidden by default) -->
+          <div class="no-results" style="display: none;">
+            <div class="no-results-illustration">
+              <svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M180 40H20C17.2 40 15 42.2 15 45v90c0 2.8 2.2 5 5 5h160c2.8 0 5-2.2 5-5V45c0-2.8-2.2-5-5-5z" fill="#E6E6E6" stroke="#B3B3B3" stroke-width="2"/>
+                <path d="M180 40v15H20V45c0-2.8 2.2-5 5-5h150c2.8 0 5 2.2 5 5z" fill="#CCCCCC"/>
+                <circle cx="35" cy="53" r="3" fill="#4CAF50"/>
+                <circle cx="50" cy="53" r="3" fill="#FFC107"/>
+                <circle cx="65" cy="53" r="3" fill="#F44336"/>
+                <rect x="30" y="75" width="140" height="10" rx="2" fill="#E0E0E0"/>
+                <rect x="30" y="95" width="120" height="10" rx="2" fill="#E0E0E0"/>
+                <rect x="30" y="115" width="100" height="10" rx="2" fill="#E0E0E0"/>
+                <path d="M100 70c-16.6 0-30 13.4-30 30s13.4 30 30 30 30-13.4 30-30-13.4-30-30-30zm0 55c-13.8 0-25-11.2-25-25s11.2-25 25-25 25 11.2 25 25-11.2 25-25 25z" fill="#90CAF9"/>
+                <path d="M100 95c-2.8 0-5-2.2-5-5V75c0-2.8 2.2-5 5-5s5 2.2 5 5v15c0 2.8-2.2 5-5 5z" fill="#90CAF9"/>
+                <path d="M100 95c-2.8 0-5-2.2-5-5V75c0-2.8 2.2-5 5-5s5 2.2 5 5v15c0 2.8-2.2 5-5 5z" fill="#90CAF9"/>
+                <path d="M100 100c-1.4 0-2.5-1.1-2.5-2.5v-5c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5v5c0 1.4-1.1 2.5-2.5 2.5z" fill="#1976D2"/>
+                <path d="M100 110c-1.4 0-2.5-1.1-2.5-2.5v-5c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5v5c0 1.4-1.1 2.5-2.5 2.5z" fill="#1976D2"/>
+              </svg>
+            </div>
+            <h2 class="no-results-title">No results found</h2>
+            <p class="no-results-message">We couldn't find any articles matching your search. Try adjusting your search or filter criteria.</p>
+            <div class="suggested-searches">
+              <a href="#" class="suggested-search">Windows Update error codes</a>
+              <a href="#" class="suggested-search">Update troubleshooting</a>
+              <a href="#" class="suggested-search">Windows 11 update history</a>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <nav class="pagination" aria-label="Pagination">
+            <a href="#" class="pagination-prev" aria-label="Previous page">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+              </svg>
+              Previous
+            </a>
+            
+            <ul class="pagination-list">
+              <li class="pagination-item">
+                <a href="#" class="pagination-link" aria-label="Page 1">1</a>
+              </li>
+              <li class="pagination-item">
+                <a href="#" class="pagination-link is-current" aria-label="Page 2" aria-current="page">2</a>
+              </li>
+              <li class="pagination-item">
+                <a href="#" class="pagination-link" aria-label="Page 3">3</a>
+              </li>
+              <li class="pagination-item">
+                <span class="pagination-ellipsis">…</span>
+              </li>
+              <li class="pagination-item">
+                <a href="#" class="pagination-link" aria-label="Page 8">8</a>
+              </li>
+            </ul>
+            
+            <a href="#" class="pagination-next" aria-label="Next page">
+              Next
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+              </svg>
+            </a>
+          </nav>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    // Toggle no results state for demo purposes
+    // In a real implementation, this would be handled by the search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Example: Show no results if URL has ?no-results parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const showNoResults = urlParams.get('no-results');
+      
+      if (showNoResults) {
+        document.querySelector('.results-list').style.display = 'none';
+        document.querySelector('.pagination').style.display = 'none';
+        document.querySelector('.no-results').style.display = 'block';
+      }
+      
+      // Handle filter checkboxes
+      const checkboxes = document.querySelectorAll('.filter-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          // In a real implementation, this would trigger a new search with updated filters
+          console.log('Filter updated:', this.id, this.checked);
+        });
+      });
+      
+      // Handle reset all filters
+      const resetButton = document.querySelector('.filter-reset');
+      if (resetButton) {
+        resetButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+          });
+          // In a real implementation, this would reset all filters and refresh results
+          console.log('All filters reset');
+        });
+      }
+    });
+  </script>
+{% endblock %}
