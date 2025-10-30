@@ -1,0 +1,354 @@
+/* Contribution Guide Styles */
+
+/* Form Styles */
+.contribution-form {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--md-default-fg-color);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Difficulty Levels */
+.difficulty-levels {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.difficulty-label {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  font-weight: 500;
+}
+
+.difficulty-label input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.difficulty-label.beginner {
+  background: rgba(16, 124, 16, 0.1);
+  color: #107c10;
+}
+
+.difficulty-label.intermediate {
+  background: rgba(0, 120, 212, 0.1);
+  color: #0078d4;
+}
+
+.difficulty-label.advanced {
+  background: rgba(255, 185, 0, 0.1);
+  color: #d29200;
+}
+
+.difficulty-label:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.difficulty-label input[type="radio"]:checked + span {
+  font-weight: 600;
+}
+
+.difficulty-label.beginner input[type="radio"]:checked + span {
+  color: #0e6e0e;
+}
+
+.difficulty-label.intermediate input[type="radio"]:checked + span {
+  color: #006cbe;
+}
+
+.difficulty-label.advanced input[type="radio"]:checked + span {
+  color: #b88a00;
+}
+
+/* Preview Area */
+.preview-area {
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+  padding: 1rem;
+  min-height: 100px;
+  font-family: var(--md-code-font-family);
+  font-size: 0.9em;
+  color: var(--md-code-fg-color);
+}
+
+.preview-placeholder {
+  color: var(--md-default-fg-color--light);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Template Card */
+.template-card {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.template-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: var(--md-primary-fg-color--light);
+  color: white;
+}
+
+.template-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.template-content {
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.template-content pre {
+  margin: 0;
+  padding: 1rem;
+  background: var(--md-code-bg-color);
+  border-radius: 4px;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/* Checklist */
+.checklist {
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.checklist-item:hover {
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checklist-checkbox {
+  margin-right: 1rem;
+  margin-top: 0.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.checklist-label {
+  flex: 1;
+  margin: 0;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.checklist-item[data-completed="true"] {
+  opacity: 0.7;
+}
+
+.checklist-item[data-completed="true"] .checklist-label {
+  text-decoration: line-through;
+  color: var(--md-default-fg-color--light);
+}
+
+/* Difficulty Levels Info */
+.difficulty-levels-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.difficulty-info {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.difficulty-info h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid;
+}
+
+.difficulty-info.beginner h4 {
+  color: #107c10;
+  border-color: rgba(16, 124, 16, 0.3);
+}
+
+.difficulty-info.intermediate h4 {
+  color: #0078d4;
+  border-color: rgba(0, 120, 212, 0.3);
+}
+
+.difficulty-info.advanced h4 {
+  color: #d29200;
+  border-color: rgba(210, 146, 0, 0.3);
+}
+
+.difficulty-info ul {
+  margin: 0.5rem 0 0 1.25rem;
+  padding: 0;
+}
+
+.difficulty-info li {
+  margin-bottom: 0.5rem;
+}
+
+/* Buttons */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.button--primary {
+  background: var(--md-primary-fg-color);
+  color: white;
+}
+
+.button--primary:hover {
+  background: var(--md-primary-fg-color--dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button--secondary {
+  background: var(--md-default-bg-color);
+  color: var(--md-primary-fg-color);
+  border: 1px solid var(--md-primary-fg-color);
+}
+
+.button--secondary:hover {
+  background: rgba(0, 120, 212, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .contribution-form {
+    padding: 1.5rem;
+  }
+  
+  .difficulty-levels {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .template-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+/* Dark mode adjustments */
+[data-md-color-scheme="slate"] {
+  .contribution-form,
+  .template-card,
+  .checklist-item,
+  .difficulty-info {
+    background: var(--md-default-bg-color);
+    border-color: var(--md-default-fg-color--lightest);
+  }
+  
+  .form-control,
+  .preview-area {
+    background: var(--md-code-bg-color);
+    border-color: var(--md-default-fg-color--lightest);
+    color: var(--md-code-fg-color);
+  }
+  
+  .preview-placeholder {
+    color: var(--md-default-fg-color--light);
+  }
+}

@@ -1,0 +1,187 @@
+/* Installation Guide Styles */
+:root {
+    --primary-color: #0078D4;
+    --accent-color: #107C10;
+    --warning-color: #D83B01;
+    --success-color: #107C10;
+    --info-color: #50E6FF;
+    --text-primary: #323130;
+    --text-secondary: #605E5C;
+    --background: #FFFFFF;
+    --surface: #F3F2F1;
+    --border: #E1DFDD;
+    --pro-tip-bg: #E5F1FB;
+    --pro-tip-border: #50E6FF;
+    --warning-bg: #FDF0EF;
+    --warning-border: #D83B01;
+}
+
+/* Progress Indicator */
+.installation-progress {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #E1E1E1;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    border: 3px solid #E1E1E1;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-circle {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.step.completed .step-circle {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.step-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #999;
+    text-align: center;
+}
+
+.step.active .step-label,
+.step.completed .step-label {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.step-connector {
+    flex: 1;
+    height: 3px;
+    background-color: #E1E1E1;
+    margin: 0 10px;
+    position: relative;
+    top: -10px;
+}
+
+.step-connector.active {
+    background-color: var(--primary-color);
+}
+
+/* Step Sections */
+.step-section {
+    margin-bottom: 4rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .installation-progress {
+        padding: 1.5rem 1rem;
+    }
+    
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .step-section {
+        padding: 1.5rem;
+    }
+}
+
+/* Callout Boxes */
+.pro-tip, .warning {
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: flex-start;
+}
+
+.pro-tip {
+    background-color: var(--pro-tip-bg);
+    border-left: 4px solid var(--primary-color);
+}
+
+.warning {
+    background-color: var(--warning-bg);
+    border-left: 4px solid var(--warning-color);
+}
+
+.pro-tip .icon {
+    font-size: 1.5rem;
+    margin-right: 0.75rem;
+    color: var(--primary-color);
+}
+
+.warning .icon {
+    font-size: 1.5rem;
+    margin-right: 0.75rem;
+    color: var(--warning-color);
+}
+
+/* Screenshot Container */
+.screenshot-container {
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.screenshot-placeholder {
+    background: #f5f5f5;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+}
+
+.caption {
+    background: var(--surface);
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+    border-top: 1px solid var(--border);
+}

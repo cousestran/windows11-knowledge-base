@@ -1,0 +1,79 @@
+site_name: Windows 11 Knowledge Base
+site_description: A comprehensive, community-driven knowledge base for Windows 11 users, administrators, and developers
+site_author: Windows 11 Community
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: '0078D4'
+      accent: '107C10'
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - scheme: slate
+      primary: '0078D4'
+      accent: 'FFB900'
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  font:
+    text: Segoe UI
+    code: Consolas
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.snippets
+  - pymdownx.tabbed
+  - pymdownx.tilde
+  - attr_list
+
+extra_css:
+  - stylesheets/extra.css
+  - stylesheets/about.css
+  - stylesheets/contribute.css
+  - stylesheets/interactive.css
+  - stylesheets/installation.css
+
+extra_javascript:
+  - javascripts/main.js
+  - javascripts/interactive.js
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - 'How to Contribute': contribute.md
+  - Installation & Deployment: 
+    - Overview: 01-installation-deployment/index.md
+    - Clean Installation Guide: 01-installation-deployment/clean-install.md
+  - Hardware Management: 02-hardware-management/index.md
+  - System Configuration: 03-system-configuration/index.md
+  - Security & Compliance: 04-security-compliance/index.md
+  - User Account Management: 05-user-account-management/index.md
+  - Updates & Maintenance: 06-updates-maintenance/index.md
+  - Backup & Recovery: 07-backup-recovery/index.md
+  - Networking & Connectivity: 08-networking-connectivity/index.md
+  - Accessibility: 09-accessibility/index.md
+  - Productivity Apps: 10-productivity-apps/index.md
+  - Troubleshooting & Diagnostics: 11-troubleshooting-diagnostics/index.md
+  - Advanced Administration: 12-advanced-administration/index.md
+  - Command Line Reference: 13-command-line-reference/index.md
+
+repo_name: 'GitHub'
+repo_url: 'https://github.com/yourusername/windows11-knowledge-base'
+edit_uri: edit/main/docs/
